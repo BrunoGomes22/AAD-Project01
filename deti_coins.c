@@ -131,9 +131,9 @@ static void alarm_signal_handler(int dummy)
 //#include "deti_coins_cpu_special_search.h"
 
 //#include "search_utilities.h"
-//#ifdef MD5_CPU_AVX
-//# include "deti_coins_cpu_avx_search.h"
-//#endif
+#ifdef MD5_CPU_AVX
+# include "deti_coins_cpu_avx_search.h"
+#endif
 //#ifdef MD5_CPU_AVX2
 //# include "deti_coins_cpu_avx2_search.h"
 //#endif
@@ -201,7 +201,7 @@ int main(int argc,char **argv)
       case '1':
         printf("searching for %u seconds using deti_coins_cpu_avx_search()\n",seconds);
         fflush(stdout);
-        deti_coins_cpu_avx_search(n_random_words);
+        deti_coins_cpu_avx_search();
         break;
 #endif
 #ifdef DETI_COINS_CPU_AVX2_SEARCH
