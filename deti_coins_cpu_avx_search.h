@@ -60,8 +60,7 @@ static void deti_coins_cpu_avx_search(void)
         // compute MD5 hash using AVX
         //
         md5_cpu_avx((v4si *)interleaved_data, (v4si *)interleaved_hash);  
-
-        for(idx = 0u ; idx < 4u; n++){
+        for(idx = 0u ; idx < 4u; idx++){
 
             for(n = 0u; n<4u; n++){
                 hash[n] = interleaved_hash[4u*n + idx];
