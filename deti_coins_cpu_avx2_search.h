@@ -31,7 +31,17 @@ static void deti_coins_cpu_avx2_search(void)
     //
     // arbitrary, but printable utf-8 data terminated with a '\n' is highly desirable
     //
-    for (idx = 10u; idx < 13u * 4u - 1u; idx++)
+    u32_t random_num = rand() % 10000;
+
+    char random_str[5];
+    snprintf(random_str, sizeof(random_str), "%04u", random_num);
+
+    bytes[10u] = random_str[0];
+    bytes[11u] = random_str[1];
+    bytes[12u] = random_str[2];
+    bytes[13u] = random_str[3];
+
+    for (idx = 14u; idx < 13u * 4u - 1u; idx++)
         bytes[idx] = ' ';
     //
     // mandatory termination
