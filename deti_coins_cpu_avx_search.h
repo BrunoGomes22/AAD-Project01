@@ -6,14 +6,12 @@
 #ifndef DETI_COINS_CPU_AVX_SEARCH
 #define DETI_COINS_CPU_AVX_SEARCH
 
-#include <immintrin.h> // AVX intrinsics
-
 static void deti_coins_cpu_avx_search(void)
 {
     u32_t n, idx, coin[13u], hash[4u];
     u64_t n_attempts, n_coins;
     u08_t *bytes;
-    static u32_t interleaved_data[13u * 4u] __attribute__((aligned(16))); // 4 DETI coins
+    static u32_t interleaved_coins[13u * 4u] __attribute__((aligned(16))); // 4 DETI coins
     static u32_t interleaved_hash[4u * 4u] __attribute__((aligned(16)));   // 4 MD5 hashes
 
     bytes = (u08_t *)&coin[0]; // acesses coin information byte per byte
@@ -33,7 +31,17 @@ static void deti_coins_cpu_avx_search(void)
     //
     // arbitrary, but printable utf-8 data terminated with a '\n' is highly desirable
     //
-    for (idx = 10u; idx < 13u * 4u - 1u; idx++) // to do: generate random ASCII symbols
+    u32_t random_num = rand() % 10000;
+
+    char random_str[5];
+    snprintf(random_str, sizeof(random_str), "%04u", random_num);
+
+    bytes[10u] = random_str[0];
+    bytes[11u] = random_str[1];
+    bytes[12u] = random_str[2];
+    bytes[13u] = random_str[3];
+
+    for (idx = 14u; idx < 13u * 4u - 1u; idx++)
         bytes[idx] = ' ';
     //
     // mandatory termination
@@ -47,21 +55,17 @@ static void deti_coins_cpu_avx_search(void)
         //
         // interleave data for AVX processing
         //
-        for(idx = 0u; idx < 13u; idx++){
-            interleaved_data[4u*idx] = coin[idx];
-        }
-        for(idx = 1u; idx < 4u;idx++){
-            for(n = 0u; n < 13u; n++){
-            interleaved_data[4u * n + idx] = interleaved_data[4u * n];
+        for(idx = 0;idx < 4;idx++){
+            for(n = 0;n < 12;n++){
+                interleaved_coins[4*n+idx] = coin[n];
             }
+            interleaved_coins[4*n+idx] = coin[n] + idx; // change last block of the coin to introduce variability
         }
-
         //
         // compute MD5 hash using AVX
         //
-        md5_cpu_avx((v4si *)interleaved_data, (v4si *)interleaved_hash);  
+        md5_cpu_avx((v4si *)interleaved_coins, (v4si *)interleaved_hash);  
         for(idx = 0u ; idx < 4u; idx++){
-
             for(n = 0u; n<4u; n++){
                 hash[n] = interleaved_hash[4u*n + idx];
             }
@@ -78,8 +82,10 @@ static void deti_coins_cpu_avx_search(void)
             // if the number of trailing zeros is >= 32 we have a DETI coin
             //
             if (n >= 32u)
-            {
+            {   
+                coin[12] += idx;
                 save_deti_coin(coin);
+                coin[12] -= idx;
                 n_coins++;
             }
 
