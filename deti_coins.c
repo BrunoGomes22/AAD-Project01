@@ -20,7 +20,7 @@
 #endif
 
 #ifndef USE_CUDA
-# define USE_CUDA 0
+# define USE_CUDA 1
 #endif
 
 
@@ -137,7 +137,7 @@ static void alarm_signal_handler(int dummy)
 #include "deti_coins_cpu_search.h"
 //#include "deti_coins_cpu_special_search.h"
 
-//#include "search_utilities.h"
+#include "search_utilities.h"
 #ifdef MD5_CPU_AVX
 # include "deti_coins_cpu_avx_search.h"
 #endif
@@ -150,9 +150,9 @@ static void alarm_signal_handler(int dummy)
 //#ifdef MD5_CPU_NEON
 //# include "deti_coins_cpu_neon_search.h"
 //#endif
-//#if USE_CUDA > 0
-//# include "deti_coins_cuda_search.h"
-//#endif
+#if USE_CUDA > 0
+# include "deti_coins_cuda_search.h"
+#endif
 
 
 //
