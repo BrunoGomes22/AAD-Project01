@@ -111,21 +111,6 @@ static void deti_coins_cpu_special_search(void)
             // if the number of trailing zeros is >= 32 we have a DETI coin
             //
             if (n >= 32u) {
-
-                printf("Found coin: ");
-                for(int n = 0; n<13; n++){
-                    printf("%08x ",interleaved_coins[8*n+idx]);
-                }
-                printf("\n");
-
-                printf("Hash: ");
-                for (int n = 0; n < 4; n++) {
-                    printf("%08x ", interleaved_hash[8 * n + idx]);
-                }
-                printf("\n");
-
-
-
                 coin[12] += idx;
                 save_deti_coin(coin);
                 coin[12] -= idx;
