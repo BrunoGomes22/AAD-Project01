@@ -20,7 +20,7 @@ static void deti_coins_cuda_search(u32_t n_random_words)
 
     random_word = (n_random_words == 0u) ? 0x20202020u : random_value_to_try_ascii();
     custom_word_1 = custom_word_2 = 0x20202020u;
-    initialize_cuda(0,"deti_coins_cuda_kernel.cubin","deti_coins_cuda_kernel_search",1024,0u);
+    initialize_cuda(0,"deti_coins_cuda_kernel_search.cubin","deti_coins_cuda_kernel_search",1024,0u);
     max_idx = 1u;
     for(n_attempts = n_coins = 0ul; stop_request == 0; n_attempts += (64ul << 20))    
     {
