@@ -36,12 +36,32 @@ static void deti_coins_cpu_avx2_search(void)
     char random_str[5];
     snprintf(random_str, sizeof(random_str), "%04u", random_num);
 
-    bytes[10u] = random_str[0];
-    bytes[11u] = random_str[1];
-    bytes[12u] = random_str[2];
-    bytes[13u] = random_str[3];
+    bytes[10u] = ' ';
+    bytes[11u] = ' ';
+    bytes[12u] = ' ';
+    bytes[13u] = ' ';
+    bytes[14u] = ' ';
+    bytes[15u] = ' ';
 
-    for (idx = 14u; idx < 13u * 4u - 1u; idx++)
+    bytes[16u] = 's';
+    bytes[17u] = 'e';
+    bytes[18u] = 'a';
+    bytes[19u] = 'r';
+    bytes[20u] = 'c';
+    bytes[21u] = 'h';
+    bytes[22u] = '_';
+    bytes[23u] = 'i';
+    bytes[24u] = 'd';
+    bytes[25u] = '=';
+
+    bytes[26u] = '[';
+    bytes[27u] = random_str[0];
+    bytes[28u] = random_str[1];
+    bytes[29u] = random_str[2];
+    bytes[30u] = random_str[3];
+    bytes[31u] = ']';
+
+    for (idx = 32u; idx < 13u * 4u - 1u; idx++)
         bytes[idx] = ' ';
     //
     // mandatory termination
