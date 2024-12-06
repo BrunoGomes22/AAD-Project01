@@ -135,7 +135,6 @@ static void alarm_signal_handler(int dummy)
 }
 
 #include "deti_coins_cpu_search.h"
-#include "deti_coins_cpu_special_search.h"
 
 #include "search_utilities.h"
 #ifdef MD5_CPU_AVX
@@ -143,7 +142,7 @@ static void alarm_signal_handler(int dummy)
 #endif
 #ifdef MD5_CPU_AVX2
 # include "deti_coins_cpu_avx2_search.h"
-#include "deti_coins_cpu_avx2_openmp_search.h"
+# include "deti_coins_cpu_special_search.h"
 #endif
 #ifdef MD5_CPU_AVX512F
 # include "deti_coins_cpu_avx512f_search.h"
@@ -153,6 +152,9 @@ static void alarm_signal_handler(int dummy)
 //#endif
 #if USE_CUDA > 0
 # include "deti_coins_cuda_search.h"
+#endif
+# if USE_OPENMP > 0
+  #include "deti_coins_cpu_avx2_openmp_search.h"
 #endif
 
 

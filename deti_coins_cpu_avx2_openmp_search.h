@@ -2,10 +2,11 @@
 //
 // deti_coins_cpu_avx2_openmp_search() --- find DETI coins using md5_cpu_avx2() with OpenMP
 //
-#include <omp.h>
-
+#if USE_OPENMP > 0
 #ifndef DETI_COINS_CPU_AVX2_OPENMP_SEARCH
 #define DETI_COINS_CPU_AVX2_OPENMP_SEARCH
+
+#include <omp.h>
 
 #define NUM_THREADS 4
 
@@ -137,4 +138,5 @@ printf("deti_coins_cpu_avx2_openmp_search: %lu DETI coin%s found in %lu attempt%
 
 }
 
+#endif
 #endif

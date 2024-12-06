@@ -40,6 +40,7 @@ O_FILES = deti_coins_cpu_avx2_openmp_search.h
 clean:
 	rm -f a.out
 	rm -f deti_coins_intel
+	rm -f deti_coins_intel_openmp
 	rm -f deti_coins_apple
 	rm -f deti_coins_intel_cuda md5_cuda_kernel.cubin deti_coins_cuda_kernel_search.cubin
 
