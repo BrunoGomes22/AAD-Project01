@@ -1,15 +1,19 @@
 // Arquiteturas de Alto Desempenho 2024/2025
 //
-// deti_coins_cpu_avx2_search() --- find DETI coins using md5_cpu_avx2()
+// deti_coins_cpu_avx2_openmp_search() --- find DETI coins using md5_cpu_avx2() with OpenMP
 //
+#include <omp.h>
 
-#ifndef DETI_COINS_CPU_AVX2_SEARCH
-#define DETI_COINS_CPU_AVX2_SEARCH
+#ifndef DETI_COINS_CPU_AVX2_OPENMP_SEARCH
+#define DETI_COINS_CPU_AVX2_OPENMP_SEARCH
 
-static void deti_coins_cpu_avx2_search(void)
+static void deti_coins_cpu_avx2_openmp_search(void)
+{
+
+    u64_t n_attempts, n_coins;
+#pragma omp parallel num_threads(4) reduction(+:n_attempts, n_coins)
 {
     u32_t n, idx, coin[13u], hash[4u];
-    u64_t n_attempts, n_coins;
     u08_t *bytes;
     static u32_t interleaved_coins[13u * 8u] __attribute__((aligned(32))); // 8 DETI coins
     static u32_t interleaved_hash[4u * 8u] __attribute__((aligned(32)));   // 8 MD5 hashes
@@ -70,6 +74,7 @@ static void deti_coins_cpu_avx2_search(void)
     //
     // find DETI coins
     //
+    coin[12] += (omp_get_thread_num()); //different set of coins for different threads
     for (n_attempts = n_coins = 0ul; stop_request == 0; n_attempts++)
     {
         //
@@ -118,7 +123,13 @@ static void deti_coins_cpu_avx2_search(void)
             bytes[idx]++;
     }
     STORE_DETI_COINS();
-    printf("deti_coins_cpu_avx2_search: %lu DETI coin%s found in %lu attempt%s (expected %.2f coins)\n", n_coins, (n_coins == 1ul) ? "" : "s", n_attempts, (n_attempts == 1ul) ? "" : "s", (double)n_attempts / (double)(1ul << 32));
+    printf("deti_coins_cpu_avx2_openmp_search[%d]: %lu DETI coin%s found in %lu attempt%s (expected %.2f coins)\n", omp_get_thread_num(),n_coins, (n_coins == 1ul) ? "" : "s", n_attempts, (n_attempts == 1ul) ? "" : "s", (double)n_attempts / (double)(1ul << 32));
+
+
+}
+
+printf("deti_coins_cpu_avx2_openmp_search: %lu DETI coin%s found in %lu attempt%s (expected %.2f coins)\n", n_coins, (n_coins == 1ul) ? "" : "s", n_attempts, (n_attempts == 1ul) ? "" : "s", (double)n_attempts / (double)(1ul << 32));
+
 }
 
 #endif
