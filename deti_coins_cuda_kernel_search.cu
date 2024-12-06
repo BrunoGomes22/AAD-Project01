@@ -36,7 +36,7 @@ extern "C" __global__ __launch_bounds__(128,1) void deti_coins_cuda_kernel_searc
   coin[ 9] = 0x20202020u; 
   coin [10] = v1;
   coin [11] = v2;
-  coin [12] = 0x20202020u; // "71\n  "
+  coin [12] = 0x0a202020u; // "\n  "
   coin [4] += (n % 64) << 0; n/=64;
   coin [4] += (n % 64) << 8; n/=64;
   coin [4] += (n % 64) << 16; n/=64; 
