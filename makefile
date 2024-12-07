@@ -84,6 +84,9 @@ md5_cuda_kernel.cubin:			md5.h md5_cuda_kernel.cu
 deti_coins_cuda_kernel_search.cubin:	md5.h deti_coins_cuda_kernel_search.cu
 	nvcc -arch=$(CUDA_ARCH) --compiler-options -O2,-Wall -I$(CUDA_DIR)/include --cubin deti_coins_cuda_kernel_search.cu -o deti_coins_cuda_kernel_search.cubin
 
-# compile web assembly
-deti_coins_webass: 
-	emcc -Wall -02 deticoins_web_assembly.c -o deti_coins_web_assembly.html
+#
+# compile WebAssembly
+#
+deti_coins_webass: deti_coins_web_assembly.c $(H_FILES)
+	emcc -Wall -O2 -s WASM=1 -s EXPORTED_FUNCTIONS="['_main']" -s EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']" \
+	     deti_coins_web_assembly.c -o deti_coins_web_assembly.html

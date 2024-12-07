@@ -2,7 +2,7 @@
 #include <time.h>
 
 typedef unsigned int u32_t;
-
+typedef unsigned long long uint64_t;
 //
 // MD5 implementation (for a little-endian architecture) for a message with exactly 13*4 bytes
 //
@@ -252,6 +252,6 @@ CUSTOM_MD5_CODE();
         if(v1 == 0x20202020u){ next_value_to_try(v2); coin[10] = v2;}
     }
     t = clock() - t;
-    printf("deti_coins_web_assembly: %u DETI coin%s found in %u attempt%s (expected %.2f coins) in %.3fs\n",n_coins,(n_coins == 1u) ? "" : "s",n_attempts,(n_attempts == 1u) ? "" : "s",(double)n_attempts / (double)(1ul << 32),(double)t/(double)CLOCKS_PER_SEC);
+    printf("deti_coins_web_assembly: %u DETI coin%s found in %u attempt%s (expected %.2f coins) in %.3fs\n",n_coins,(n_coins == 1u) ? "" : "s",n_attempts,(n_attempts == 1u) ? "" : "s",(double)n_attempts / (double)((uint64_t)1 << 32),(double)t/(double)CLOCKS_PER_SEC);
 
 }
