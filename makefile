@@ -67,3 +67,7 @@ md5_cuda_kernel.cubin:			md5.h md5_cuda_kernel.cu
 
 deti_coins_cuda_kernel_search.cubin:	md5.h deti_coins_cuda_kernel_search.cu
 	nvcc -arch=$(CUDA_ARCH) --compiler-options -O2,-Wall -I$(CUDA_DIR)/include --cubin deti_coins_cuda_kernel_search.cu -o deti_coins_cuda_kernel_search.cubin
+
+# compile web assembly
+deti_coins_webass: 
+	emcc -Wall -02 deticoins_web_assembly.c -o deti_coins_web_assembly.html
