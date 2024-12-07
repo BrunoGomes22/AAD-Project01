@@ -10,11 +10,10 @@
 
 static void deti_coins_cpu_mpi_search(void)
 {
-    int rank, size;
-    MPI_Init(NULL, NULL);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-
+  int rank, size;
+  MPI_Init(NULL, NULL);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   u32_t n,idx,coin[13u],hash[4u];
   u64_t n_attempts,n_coins;
@@ -85,13 +84,13 @@ static void deti_coins_cpu_mpi_search(void)
     MPI_Reduce(&n_attempts, &total_attempts, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if(rank == 0){
-        printf("total_coins: %lu\n", total_coins);
-        printf("total_attempts: %lu\n", total_attempts);
+      printf("total_coins: %lu\n", total_coins);
+      printf("total_attempts: %lu\n", total_attempts);
     }
 
-  STORE_DETI_COINS();
+    STORE_DETI_COINS();
   
-  MPI_Finalize();
+    MPI_Finalize();
 }
 
 #endif
