@@ -23,6 +23,10 @@
 # define USE_CUDA 1
 #endif
 
+#ifndef USE_OPENMP
+# define USE_OPENMP 0
+#endif
+
 
 //
 // unsigned integer data types and some useful functions (in cpu_utilities.h)
