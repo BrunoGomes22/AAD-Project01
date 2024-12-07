@@ -23,6 +23,10 @@
 # define USE_CUDA 1
 #endif
 
+#ifndef USE_OPENMP
+# define USE_OPENMP 0
+#endif
+
 
 //
 // unsigned integer data types and some useful functions (in cpu_utilities.h)
@@ -135,7 +139,6 @@ static void alarm_signal_handler(int dummy)
 }
 
 #include "deti_coins_cpu_search.h"
-#include "deti_coins_cpu_special_search.h"
 
 #include "search_utilities.h"
 #ifdef MD5_CPU_AVX
@@ -143,6 +146,7 @@ static void alarm_signal_handler(int dummy)
 #endif
 #ifdef MD5_CPU_AVX2
 # include "deti_coins_cpu_avx2_search.h"
+# include "deti_coins_cpu_special_search.h"
 #endif
 #ifdef MD5_CPU_AVX512F
 # include "deti_coins_cpu_avx512f_search.h"
@@ -152,6 +156,9 @@ static void alarm_signal_handler(int dummy)
 //#endif
 #if USE_CUDA > 0
 # include "deti_coins_cuda_search.h"
+#endif
+# if USE_OPENMP > 0
+  #include "deti_coins_cpu_avx2_openmp_search.h"
 #endif
 
 
@@ -249,6 +256,13 @@ int main(int argc,char **argv)
         deti_coins_cpu_special_search();
         break;
 #endif
+#ifdef DETI_COINS_CPU_AVX2_OPENMP_SEARCH
+      case 'A':
+        printf("searching for %u seconds using deti_coins_cpu_avx2_openmp_search()\n",seconds);
+        fflush(stdout);
+        deti_coins_cpu_avx2_openmp_search();
+        break;
+#endif
     }
     return 0;
   }
@@ -271,6 +285,9 @@ int main(int argc,char **argv)
 #endif
 #ifdef DETI_COINS_CPU_SPECIAL_SEARCH
   fprintf(stderr,"       %s -s9 [seconds] [ignored]          # special search for DETI coins using md5_cpu()\n",argv[0]);
+#endif
+#ifdef DETI_COINS_CPU_AVX2_OPENMP_SEARCH
+  fprintf(stderr,"       %s -sA [seconds] [ignored]          # search for DETI coins using md5_cpu_avx2() with OpenMP\n",argv[0]);
 #endif
   fprintf(stderr,"                                           #   seconds is the amount of time spent in the search\n");
   fprintf(stderr,"                                           #   n_random_words is the number of 4-byte words to use\n");

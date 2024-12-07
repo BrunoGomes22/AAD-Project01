@@ -2,21 +2,24 @@
 //
 // deti_coins_cpu_avx2_openmp_search() --- find DETI coins using md5_cpu_avx2() with OpenMP
 //
-#include <omp.h>
-
+#if USE_OPENMP > 0
 #ifndef DETI_COINS_CPU_AVX2_OPENMP_SEARCH
 #define DETI_COINS_CPU_AVX2_OPENMP_SEARCH
+
+#include <omp.h>
+
+#define NUM_THREADS 4
 
 static void deti_coins_cpu_avx2_openmp_search(void)
 {
 
-    u64_t n_attempts, n_coins;
-#pragma omp parallel num_threads(4) reduction(+:n_attempts, n_coins)
+    u64_t n_attempts = 0 , n_coins = 0;
+#pragma omp parallel num_threads(NUM_THREADS) reduction(+:n_attempts, n_coins)
 {
     u32_t n, idx, coin[13u], hash[4u];
     u08_t *bytes;
-    static u32_t interleaved_coins[13u * 8u] __attribute__((aligned(32))); // 8 DETI coins
-    static u32_t interleaved_hash[4u * 8u] __attribute__((aligned(32)));   // 8 MD5 hashes
+    u32_t interleaved_coins[13u * 8u] __attribute__((aligned(32))); // 8 DETI coins
+    u32_t interleaved_hash[4u * 8u] __attribute__((aligned(32)));   // 8 MD5 hashes
 
     bytes = (u08_t *)&coin[0]; // accesses coin information byte per byte
     //
@@ -108,7 +111,10 @@ static void deti_coins_cpu_avx2_openmp_search(void)
             //
             if (n >= 32u) {
                 coin[12] += idx;
-                save_deti_coin(coin);
+#pragma omp critical
+{          
+                save_deti_coin(coin); // write coins in a buffer
+}
                 coin[12] -= idx;
                 n_coins++;
             }
@@ -122,14 +128,15 @@ static void deti_coins_cpu_avx2_openmp_search(void)
         if (idx < 13u * 4u - 1u)
             bytes[idx]++;
     }
-    STORE_DETI_COINS();
+    
     printf("deti_coins_cpu_avx2_openmp_search[%d]: %lu DETI coin%s found in %lu attempt%s (expected %.2f coins)\n", omp_get_thread_num(),n_coins, (n_coins == 1ul) ? "" : "s", n_attempts, (n_attempts == 1ul) ? "" : "s", (double)n_attempts / (double)(1ul << 32));
 
 
 }
-
+STORE_DETI_COINS(); // writting the coins to the disk needs to be done outside the parallel region (to avoid conflicts between different threads)
 printf("deti_coins_cpu_avx2_openmp_search: %lu DETI coin%s found in %lu attempt%s (expected %.2f coins)\n", n_coins, (n_coins == 1ul) ? "" : "s", n_attempts, (n_attempts == 1ul) ? "" : "s", (double)n_attempts / (double)(1ul << 32));
 
 }
 
+#endif
 #endif
