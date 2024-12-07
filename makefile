@@ -33,6 +33,7 @@ H_FILES  += deti_coins_cuda_search.h
 C_FILES   = cuda_driver_api_utilities.h md5_cuda.h deti_coins_cuda_search.h
 
 O_FILES = deti_coins_cpu_avx2_openmp_search.h
+M_FILES = deti_coins_cpu_mpi_search.h
 
 #
 # clean up
@@ -41,6 +42,7 @@ clean:
 	rm -f a.out
 	rm -f deti_coins_intel
 	rm -f deti_coins_intel_openmp
+	rm -f deti_coins_intel_mpi
 	rm -f deti_coins_apple
 	rm -f deti_coins_intel_cuda md5_cuda_kernel.cubin deti_coins_cuda_kernel_search.cubin
 
@@ -56,6 +58,12 @@ deti_coins_intel:	$(SRC) $(H_FILES)
 #
 deti_coins_intel_openmp: $(SRC) $(H_FILES) $(O_FILES)
 	cc -Wall -O2 -mavx2 -fopenmp -DUSE_CUDA=0 -DUSE_OPENMP=1 $(SRC) -o deti_coins_intel_openmp
+
+#
+# compile for Intel/AMD processors without CUDA and with MPI
+#
+deti_coins_intel_mpi: $(SRC) $(H_FILES) $(M_FILES)
+	mpicc -Wall -O2 -mavx2 -DUSE_CUDA=0 -DUSE_MPI=1 $(SRC) -o deti_coins_intel_mpi
 
 #
 # compilation for Apple silicon without CUDA
