@@ -297,13 +297,13 @@ int main(int argc,char **argv)
   fprintf(stderr,"       %s -s5 [seconds] [n_random_words]   # search for DETI coins using md5_cpu_avx512f()\n",argv[0]);
 #endif
 #ifdef DETI_COINS_CPU_SPECIAL_SEARCH
-  fprintf(stderr,"       %s -s9 [seconds] [ignored]          # special search for DETI coins using md5_cpu()\n",argv[0]);
+  fprintf(stderr,"       %s -s9 [seconds] [ignored]          # special search for DETI coins using md5_cpu_avx2()\n",argv[0]);
 #endif
 #ifdef DETI_COINS_CPU_AVX2_OPENMP_SEARCH
   fprintf(stderr,"       %s -sA [seconds] [ignored]          # search for DETI coins using md5_cpu_avx2() with OpenMP\n",argv[0]);
 #endif
 #ifdef DETI_COINS_CPU_MPI_SEARCH
-  fprintf(stderr,"       %s -sB [seconds] [ignored]          # search for DETI coins using md5_cpu_avx2() with MPI\n",argv[0]);
+  fprintf(stderr,"       %s -sB [seconds] [ignored]          # search for DETI coins using md5_cpu() with MPI\n",argv[0]);
 #endif
   fprintf(stderr,"                                           #   seconds is the amount of time spent in the search\n");
   fprintf(stderr,"                                           #   n_random_words is the number of 4-byte words to use\n");
